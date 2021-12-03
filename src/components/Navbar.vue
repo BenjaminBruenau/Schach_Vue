@@ -3,8 +3,11 @@
   <nav class="navbar navbar-expand-lg navbar-dark bg-black mb-5">
     <div class="container">
       <a class="navbar-brand fw-bold" href="/">
-        <!--<img src="@routes.Assets.versioned("images/chess-logo.webp")" alt="" width="30" height="30" class="d-inline-block align-text-top">-->
-        Chess
+        <div class="d-flex justify-content-center flex-row">
+          <img src="../assets/images//chess-logo.webp" alt="" width="30" height="30" class="d-inline-block">
+          <div>Chess</div>
+        </div>
+
       </a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
               aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"
