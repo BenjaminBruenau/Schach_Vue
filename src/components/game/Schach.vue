@@ -37,25 +37,25 @@
         <b id="kingPiece" class="white">♔</b>
       </div>
       <div class="game_status">
-        <b>Status:</b>
+        <b>Status: </b>
         <i id="gameStatus" ></i>
       </div>
       <br>
       <div class="move_container">
         <div class="buttons">
-          <button onclick="newGame()" class="action-button new-game-button">New Game</button>
+          <button v-on:click="newGame" class="action-button new-game-button">New Game</button>
         </div>
 
         <div class="buttons">
           <div class="text-white mb-1"><strong>Debug: </strong></div>
-          <button onclick="triggerConvertPopup()" class="action-button new-game-button mb-1">Convert Pawn</button>
-          <button onclick="triggerGameOverPopup()" class="action-button new-game-button mb-1">Game Over</button>
+          <button v-on:click="triggerConvertPopup" class="action-button new-game-button mb-1">Convert Pawn</button>
+          <button v-on:click="triggerGameOverPopup" class="action-button new-game-button mb-1">Game Over</button>
         </div>
 
       </div>
     </div>
 
-    <div class="modal fade bg-dark" tabindex="-2" role="dialog" id="game-over-popup" aria-hidden="true">
+    <div class="modal fade bg-dark" tabindex="-2" role="dialog" id="game-over-popup" ref="gameOverPopup" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
           <div class="modal-header text-center bg-black">
@@ -68,13 +68,13 @@
             <h4 class="text-center"><strong>Would you like to start a new Game?</strong></h4>
           </div>
           <div class="modal-footer bg-black">
-            <button onclick="newGame()" class="action-button new-game-button" data-dismiss="modal">New Game</button>
+            <button v-on:click="newGame" class="action-button new-game-button" data-dismiss="modal">New Game</button>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="modal fade " tabindex="-2" role="dialog" id="convert-pawn-popup" aria-hidden="true">
+    <div class="modal fade " tabindex="-2" role="dialog" id="convert-pawn-popup" ref="convertPawnPopup" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content bg-dark text-white">
           <div class="modal-header text-center">
@@ -167,17 +167,449 @@
 </template>
 
 <script>
+import {webSocketMixin} from "@/mixins/webSocketMixin";
+import $ from 'jquery'
+import { Modal } from 'bootstrap'
+
+
 export default {
   name: "Schach",
+  mixins: [webSocketMixin],
   data: function() {
     return {
       chessHeader: ["A", "B", "C", "D", "E", "F", "G", "H"],
+      whites: ['♔', '♕', '♗', '♘', '♖', '♙'],
+      blacks: ['♚', '♛', '♝', '♞', '♜', '♟'],
+      pawnForward: ['♔', '♕', '♗', '♘', '♖', '♙', '♚', '♛', '♝', '♞', '♜', '♟'],
+      turn: "white",
+      selected: false,
+      moveFrom: '',
+      gameOverModal: null,
+      convertPawnModal: null,
     }
+  },
+  mounted() {
+    this.gameOverModal = new Modal(this.$refs.gameOverPopup);
+    this.convertPawnModal = new Modal(this.$refs.convertPawnPopup);
+  },
+  created: function () {
+    this.connectToWebSocket();
+
+    this.setOnMessage(this.reactToWebSocketMessage);
+
+    //ToDo: Better solution for this more in harmony with Vue
+    document.addEventListener('click', this.move);
   },
   methods: {
     convertIndizesToString: function (idx1, idx2) {
       return idx1.toString() + idx2.toString()
-    }
+    },
+    reactToWebSocketMessage: function (message) {
+      const {event, eventData } = JSON.parse(message.data);
+      console.log("Received Message: ", event)
+
+      switch (event) {
+        case "GameFieldChanged":
+          //console.log(eventData)
+          this.loadGame(eventData);
+          break;
+        case "StatusChanged":
+          this.setStatus(eventData);
+          break;
+        default:
+          console.error("Unknown Event Type For Message");
+          break;
+      }
+    },
+    loadGame: function (gameField) {
+      $(".chess_piece").each(function(index, cell) {
+        if (!cell.id) {
+          return false;
+        }
+        const match = gameField.filter(piece => piece.coordinate === cell.id);
+        if (match.length) {
+          cell.textContent = match[0].figure;
+          cell.setAttribute("value", match[0].figure);
+        } else {
+          cell.textContent = " ";
+          cell.setAttribute("value", " ");
+        }
+      })
+    },
+    setStatus: function (status) {
+      /// RUNNING = 0, CHECKED = 1, CHECKMATE = 2, MOVE_ILLEGAL = 3, PAWN_REACHED_END = 4
+      if (status.statusID > 0) {
+          this.reactToSpecialGameStatus(status);
+        } else {
+          this.closeInvalidMoveAlert();
+        }
+        const statusElement = document.getElementById("gameStatus");
+        const piece = document.getElementById("kingPiece");
+        if (status.player === "BLACK") {
+          statusElement.textContent = "PLAYER BLACK`S Turn";
+          piece.textContent = "♚";
+          piece.classList.remove("white");
+          piece.classList.add("black");
+          this.turn = "black";
+        } else {
+          statusElement.textContent = "PLAYER WHITE`S Turn";
+          piece.textContent = "♔";
+          piece.classList.remove("black");
+          piece.classList.add("white");
+          this.turn = "white";
+        }
+    },
+    reactToSpecialGameStatus: function (status) {
+      // ToDo: Save Games (Local Storage)
+      console.log('Special Status: ', status.statusID)
+
+      if (status.statusID === 3) {
+        $('#invalid-move-alert').text("Invalid Move").css("opacity", "100");
+        return;
+      }
+      if (status.statusID === 1) {
+        $('#invalid-move-alert').text("Player " + status.player + " is Checked").css("opacity", "100");
+        return;
+      }
+      if (status.statusID === 2) {
+        this.closeInvalidMoveAlert();
+        this.gameOverModal.show();
+        $('#game-over-popup-title').text('Game Over: Player' + status.player + " Won!")
+        return;
+      }
+      if (status.statusID === 4) {
+        this.closeInvalidMoveAlert();
+        this.convertPawnModal.show();
+        $('.convert_piece').click(event => {
+          this.sendWebSocketRequest("convert-pawn/" + event.currentTarget.id);
+          this.convertPawnModal.hide();
+        })
+      }
+    },
+    closeInvalidMoveAlert: function () {
+      $('#invalid-move-alert').css("opacity", "0");
+    },
+    newGame: function () {
+      this.sendWebSocketRequest("new-game");
+      this.gameOverModal.hide();
+    },
+    move: function (event) {
+      const id = event.target.id;
+      if (!this.isPiece(id)) {
+        return;
+      }
+      //unselect
+      if (id === this.moveFrom) {
+        this.selected = false
+        this.moveFrom = '';
+        this.removeAllSuggestions();
+        return;
+      }
+      if (!this.selected) {
+        this.moveFrom = id
+        this.selected = true
+        console.log('Suggesting Moves...')
+        this.suggestMoves(event.target, id);
+      } else {
+
+        if ('URLSearchParams' in window) {
+          let searchParams = new URLSearchParams(window.location.search);
+          searchParams.set("moveFrom", this.moveFrom);
+          searchParams.set("moveTo", id);
+
+          this.sendWebSocketRequest("move/" + JSON.stringify({ moveFrom: this.moveFrom, moveTo: id }));
+          this.selected = false;
+          this.moveFrom = '';
+          this.removeAllSuggestions()
+        }
+
+      }
+    },
+    isPiece: function (id) {
+      return id && id.length === 2;
+    },
+    suggestMoves: function (target, targetID) {
+      const targetValue = target.getAttribute('value');
+      const color = this.getColor(targetValue)
+      console.log('Piece: ', targetValue)
+
+      switch (targetValue) {
+        case '♚':
+          this.suggestKingMoves(targetID, color);
+          break;
+        case '♔':
+          this.suggestKingMoves(targetID, color);
+          break;
+        case '♛':
+          this.suggestQueenMoves(targetID, color);
+          break;
+        case '♕':
+          this.suggestQueenMoves(targetID, color);
+          break;
+        case '♝':
+          this.suggestBishopMoves(targetID, color);
+          break;
+        case '♗':
+          this.suggestBishopMoves(targetID, color);
+          break;
+        case '♞':
+          this.suggestKnightMoves(targetID, color);
+          break;
+        case '♘':
+          this.suggestKnightMoves(targetID, color);
+          break;
+        case '♜':
+          this.suggestRookMoves(targetID, color);
+          break;
+        case '♖':
+          this.suggestRookMoves(targetID, color);
+          break;
+        case '♟':
+          this.suggestBlackPawnMoves(targetID, color);
+          break;
+        case '♙':
+          this.suggestWhitePawnMoves(targetID, color);
+          break;
+        default: return;
+
+      }
+    },
+    suggestKingMoves: function (id, color) {
+      // +10 === next row; +1 === next cell
+      const idNumber = parseInt(id);
+      // King can move one cell in each direction
+      const aboveCell = idNumber + 10;
+      const belowCell = idNumber - 10;
+      const cellArray = [
+        aboveCell, belowCell, aboveCell - 1, aboveCell + 1, belowCell - 1,
+        belowCell + 1, idNumber - 1, idNumber + 1
+      ]
+      for (let index in cellArray) {
+        const idString = cellArray[index].toString();
+        this.setSuggestionColorByID(idString, color);
+      }
+
+    },
+    suggestQueenMoves: function (id, color) {
+      const idNumber = parseInt(id);
+      // Queen can move infinite cells in each direction
+      this.populateHorizontalCellSuggestions(idNumber, color);
+      this.populateVerticalCellSuggestions(idNumber, color);
+      this.populateDiagonalCellSuggestions(idNumber, color);
+    },
+    suggestBishopMoves: function (id, color) {
+      const idNumber = parseInt(id);
+      // Bishop can move vertical cells in each direction
+      this.populateDiagonalCellSuggestions(idNumber, color);
+    },
+    suggestKnightMoves: function(id, color) {
+      const idNumber = parseInt(id);
+      // Knight can jump one cell and then take the next right/left cell
+      const aboveCell = idNumber + 20;
+      const belowCell = idNumber - 20;
+      const rightCell = idNumber + 2;
+      const leftCell = idNumber - 2;
+      const cellArray = [
+        aboveCell - 1, aboveCell + 1, belowCell - 1,
+        belowCell + 1, rightCell - 10, rightCell + 10,
+        leftCell - 10, leftCell + 10
+      ]
+      for (let index in cellArray) {
+        const idString = cellArray[index].toString();
+        this.setSuggestionColorByID(idString, color);
+      }
+
+    },
+    suggestRookMoves: function (id, color) {
+      const idNumber = parseInt(id);
+      // Bishop can move straight cells in each direction
+      this.populateHorizontalCellSuggestions(idNumber, color);
+      this. populateVerticalCellSuggestions(idNumber, color);
+    },
+    suggestWhitePawnMoves: function (id, color) {
+      const idNumber = parseInt(id);
+      const aboveLeft = document.getElementById((idNumber - 11).toString());
+      const aboveRight = document.getElementById((idNumber - 9).toString());
+
+      if (aboveLeft && !this.isCellEmpty(aboveLeft)) {
+        this.setSuggestionColorByCell(aboveLeft, color);
+      }
+      if (aboveRight && !this.isCellEmpty(aboveRight)) {
+        this.setSuggestionColorByCell(aboveRight, color);
+      }
+
+      this.setSuggestionColorByID(idNumber - 10, this.pawnForward);
+      if (!this.isCellEmpty(document.getElementById((idNumber - 10).toString()))) {
+        return;
+      }
+      // Pawn can move two Fields on First Turn
+      if (id.startsWith("7")) {
+        this.setSuggestionColorByID(idNumber - 20, color);
+      }
+    },
+
+    suggestBlackPawnMoves: function (id, color) {
+      const idNumber = parseInt(id);
+      const aboveLeft = document.getElementById((idNumber + 9).toString());
+      const aboveRight = document.getElementById((idNumber + 11).toString());
+
+      if (aboveLeft && !this.isCellEmpty(aboveLeft)) {
+        this.setSuggestionColorByCell(aboveLeft, color);
+      }
+      if (aboveRight && !this.isCellEmpty(aboveRight)) {
+        this.setSuggestionColorByCell(aboveRight, color);
+      }
+
+      this.setSuggestionColorByID(idNumber + 10, this.pawnForward);
+      if (!this.isCellEmpty(document.getElementById((idNumber + 10).toString()))) {
+        return;
+      }
+      // Pawn can move two Fields on First Turn
+      if (id.startsWith("2")) {
+        this.setSuggestionColorByID(idNumber + 20, color);
+      }
+    },
+    populateHorizontalCellSuggestions: function (startingPoint, color) {
+      let cellHozLeft = document.getElementById((startingPoint - 1).toString());
+      let cellHozRight = document.getElementById((startingPoint + 1).toString());
+      let i = 1;
+      let j = 1;
+      while (cellHozLeft) {
+        this.setSuggestionColorByCell(cellHozLeft, color);
+        if (!this.isCellEmpty(cellHozLeft)) {
+          break;
+        }
+        i++;
+        cellHozLeft = document.getElementById((startingPoint - i).toString());
+      }
+      while (cellHozRight) {
+        this.setSuggestionColorByCell(cellHozRight, color);
+        if (!this.isCellEmpty(cellHozRight)) {
+          break;
+        }
+        j++;
+        cellHozRight = document.getElementById((startingPoint + j).toString());
+      }
+    },
+    populateVerticalCellSuggestions: function (startingPoint, color) {
+      let cellVertUp = document.getElementById((startingPoint - 10).toString());
+      let cellVertDown = document.getElementById((startingPoint + 10).toString());
+      let i = 10;
+      let j = 10;
+      while (cellVertUp) {
+        this.setSuggestionColorByCell(cellVertUp, color);
+        if (!this.isCellEmpty(cellVertUp)) {
+          break;
+        }
+        i = i + 10;
+        cellVertUp = document.getElementById((startingPoint - i).toString());
+      }
+      while (cellVertDown) {
+        this.setSuggestionColorByCell(cellVertDown, color);
+        if (!this.isCellEmpty(cellVertDown)) {
+          break;
+        }
+        j = j + 10;
+        cellVertDown = document.getElementById((startingPoint + j).toString());
+      }
+    },
+
+    populateDiagonalCellSuggestions: function (startingPoint, color) {
+      let cellDiagUpR = document.getElementById((startingPoint - 9).toString());
+      let cellDiagUpL = document.getElementById((startingPoint - 11).toString());
+      let cellDiagDownR = document.getElementById((startingPoint + 11).toString());
+      let cellDiagDownL = document.getElementById((startingPoint + 9).toString());
+      let i = 9;
+      let j = 11;
+      let k = 11;
+      let l = 9;
+      // Diagonal UP
+      while (cellDiagUpR) {
+        this.setSuggestionColorByCell(cellDiagUpR, color);
+        if (!this.isCellEmpty(cellDiagUpR)) {
+          break;
+        }
+        i = i + 9;
+        cellDiagUpR = document.getElementById((startingPoint - i).toString());
+      }
+      while (cellDiagUpL) {
+        this.setSuggestionColorByCell(cellDiagUpL, color);
+        if (!this.isCellEmpty(cellDiagUpL)) {
+          break;
+        }
+        j = j + 11;
+        cellDiagUpL = document.getElementById((startingPoint - j).toString());
+      }
+
+      // Diagonal DOWN
+      while (cellDiagDownR) {
+        this.setSuggestionColorByCell(cellDiagDownR, color);
+        if (!this.isCellEmpty(cellDiagDownR)) {
+          break;
+        }
+        k = k + 11;
+        cellDiagDownR = document.getElementById((startingPoint + k).toString());
+      }
+      while (cellDiagDownL) {
+        this.setSuggestionColorByCell(cellDiagDownL, color);
+        if (!this.isCellEmpty(cellDiagDownL)) {
+          break;
+        }
+        l = l + 9;
+        cellDiagDownL = document.getElementById((startingPoint + l).toString());
+      }
+    },
+    isCellEmpty: function (cell) {
+      const cellValue = cell.getAttribute('value');
+      return cellValue === " ";
+    },
+    getColor: function (cell) {
+      if(this.whites.includes(cell)){
+        return this.whites;
+      } else {
+        return this.blacks;
+      }
+    },
+    setSuggestionColorByID: function (id, color) {
+      const cell = document.getElementById(id);
+      if (!cell) {
+        return;
+      }
+      const cellValue = cell.getAttribute('value');
+
+      if (cellValue === " "|| !color.includes(cellValue)) {
+        cell.classList.add('suggestion-green');
+      } else {
+        cell.classList.add('suggestion-red');
+      }
+    },
+    setSuggestionColorByCell: function (cell, color) {
+      const cellValue = cell.getAttribute('value');
+
+      if (cellValue === " " || !color.includes(cellValue)) {
+        cell.classList.add('suggestion-green');
+      } else {
+        cell.classList.add('suggestion-red');
+      }
+    },
+    removeAllSuggestions: function() {
+      $(".chess_piece").removeClass("suggestion-green").removeClass("suggestion-red")
+    },
+
+
+
+    /// DEBUG
+    triggerConvertPopup: function () {
+      this.convertPawnModal.show();
+      $('.convert_piece').click(event => {
+        this.sendWebSocketRequest("convert-pawn/" + event.currentTarget.id);
+        this.convertPawnModal.hide();
+      })
+    },
+    triggerGameOverPopup: function () {
+      $('#game-over-popup-title').text('Game Over: Player White Won!')
+      this.gameOverModal.show();
+    },
   }
 }
 </script>

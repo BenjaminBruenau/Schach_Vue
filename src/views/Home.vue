@@ -23,13 +23,16 @@
 <script>
 // @ is an alias to /src
 /// Workaround for Autoplay not working in Chrome and Firefox
-document.addEventListener('click', playMusic);
-function playMusic() {
-  document.getElementById("audioID").play();
-  document.removeEventListener('click', playMusic);
-}
+
 export default {
   name: 'Home',
+  created: function () {
+    document.addEventListener('click', playMusic);
+    function playMusic() {
+      document.getElementById("audioID").play();
+      document.removeEventListener('click', playMusic);
+    }
+  }
 }
 </script>
 
