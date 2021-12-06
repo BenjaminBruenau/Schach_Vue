@@ -26,7 +26,10 @@ export default {
     }
   },
   mounted() {
-    this.modal = new Modal(this.$refs[this.refName]);
+    this.modal = new Modal(this.$refs[this.refName], {
+      backdrop: 'static',
+      keyboard: false
+    });
   },
   data: function () {
     return {
