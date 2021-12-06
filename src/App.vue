@@ -33,6 +33,9 @@
     }
   }
 }
+
+/* To Overwrite the padding-right added by modal-open */
+body, Footer { padding-right: 0 !important }
 </style>
 <script>
 import Navbar from "@/components/Navbar";

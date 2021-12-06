@@ -24,7 +24,10 @@
             <template v-if="columnIndex !== 0">
 
             </template>
+            <img src="../../assets/images/pieces2/knight-white.png" alt="">
+
             -->
+
           </td>
         </tr>
       </table>

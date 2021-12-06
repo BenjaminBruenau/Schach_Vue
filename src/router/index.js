@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Schach from "@/components/game/Schach";
+import PlayerStats from '@/components/statistics/PlayerStats';
 
 Vue.use(VueRouter)
 
@@ -23,6 +24,11 @@ const routes = [
     path: '/schach',
     name: 'Chess | Play',
     component: Schach
+  },
+  {
+    path: '/statistics',
+    name: 'Chess | Statistics',
+    component: PlayerStats
   }
 ]
 
