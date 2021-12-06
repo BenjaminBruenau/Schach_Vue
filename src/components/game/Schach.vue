@@ -58,11 +58,12 @@
       </div>
     </div>
 
-    <div class="modal fade bg-dark" tabindex="-2" role="dialog" id="game-over-popup" ref="gameOverPopup" aria-hidden="true">
+
+    <Modal v-bind:ref-name="'gameOverPopup'" v-bind:show="this.showGameOverModal" element-i-d="game-over-popup" background-class="bg-dark">
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
           <div class="modal-header text-center bg-black">
-            <h5 class="modal-title text-white" id="game-over-popup-title"><b>Game Over: </b></h5>
+            <h5 class="modal-title text-white" id="test-title"><b>Game Over: </b></h5>
           </div>
           <div class="modal-body">
             <p class="text-center">
@@ -75,9 +76,9 @@
           </div>
         </div>
       </div>
-    </div>
+    </Modal>
 
-    <div class="modal fade " tabindex="-2" role="dialog" id="convert-pawn-popup" ref="convertPawnPopup" aria-hidden="true">
+    <Modal v-bind:ref-name="'convertPawnPopup'" v-bind:show="showConvertPawnModal" element-i-d="convert-pawn-popup" background-class="">
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content bg-dark text-white">
           <div class="modal-header text-center">
@@ -159,10 +160,10 @@
           </div>
         </div>
       </div>
-    </div>
-
+    </Modal>
 
   </div>
+
   <div id="invalid-move-alert" class="alert alert-danger alert-dismissible fade show mt-3" role="alert" style="opacity: 0">
     <strong>Invalid Move!</strong>
   </div>
@@ -172,11 +173,12 @@
 <script>
 import {webSocketMixin} from "@/mixins/webSocketMixin";
 import $ from 'jquery'
-import { Modal } from 'bootstrap'
+import Modal from "@/components/shared/Modal";
 
 
 export default {
   name: "Schach",
+  components: {Modal},
   mixins: [webSocketMixin],
   data: function() {
     return {
@@ -187,13 +189,9 @@ export default {
       turn: "white",
       selected: false,
       moveFrom: '',
-      gameOverModal: null,
-      convertPawnModal: null,
+      showGameOverModal: false,
+      showConvertPawnModal: false,
     }
-  },
-  mounted() {
-    this.gameOverModal = new Modal(this.$refs.gameOverPopup);
-    this.convertPawnModal = new Modal(this.$refs.convertPawnPopup);
   },
   created: function () {
     this.connectToWebSocket();
@@ -276,16 +274,16 @@ export default {
       }
       if (status.statusID === 2) {
         this.closeInvalidMoveAlert();
-        this.gameOverModal.show();
+        this.showGameOverModal = true;
         $('#game-over-popup-title').text('Game Over: Player' + status.player + " Won!")
         return;
       }
       if (status.statusID === 4) {
         this.closeInvalidMoveAlert();
-        this.convertPawnModal.show();
+        this.showConvertPawnModal = true;
         $('.convert_piece').click(event => {
           this.sendWebSocketRequest("convert-pawn/" + event.currentTarget.id);
-          this.convertPawnModal.hide();
+          this.showConvertPawnModal = false;
         })
       }
     },
@@ -294,7 +292,7 @@ export default {
     },
     newGame: function () {
       this.sendWebSocketRequest("new-game");
-      this.gameOverModal.hide();
+      this.showGameOverModal = false;
     },
     move: function (event) {
       const id = event.target.id;
@@ -603,15 +601,15 @@ export default {
 
     /// DEBUG
     triggerConvertPopup: function () {
-      this.convertPawnModal.show();
+      this.showConvertPawnModal = true;
       $('.convert_piece').click(event => {
         this.sendWebSocketRequest("convert-pawn/" + event.currentTarget.id);
-        this.convertPawnModal.hide();
+        this.showConvertPawnModal = false;
       })
     },
     triggerGameOverPopup: function () {
+      this.showGameOverModal = true;
       $('#game-over-popup-title').text('Game Over: Player White Won!')
-      this.gameOverModal.show();
     },
   }
 }
