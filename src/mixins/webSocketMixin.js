@@ -4,8 +4,6 @@ export const webSocketMixin = {
             webSocket: Object,
         }
     },
-    created: function () {
-    },
     methods: {
         connectToWebSocket: function () {
             if (this.webSocket.readyState && this.webSocket.readyState === WebSocket.OPEN) {
