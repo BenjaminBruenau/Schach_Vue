@@ -6,6 +6,7 @@ import router from './router'
 // Bootstrap
 import "bootstrap/dist/css/bootstrap.min.css"
 import "bootstrap"
+import './registerServiceWorker'
 
 
 const app = createApp({
