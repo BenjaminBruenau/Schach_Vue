@@ -1,5 +1,19 @@
 module.exports = {
+  pwa: {
+    workboxOptions: {
+      navigateFallback: 'index.html',
+      skipWaiting: true,
+      clientsClaim: true,
+    }
+  },
   transpileDependencies: [
-    'vuetify'
-  ]
+    'quasar'
+  ],
+
+  pluginOptions: {
+    quasar: {
+      importStrategy: 'kebab',
+      rtlSupport: false
+    }
+  }
 }

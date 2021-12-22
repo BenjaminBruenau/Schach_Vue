@@ -15,6 +15,7 @@
             <h2>Lore</h2>
             <p class="lead">
               Chess is a board game played between two players. It is sometimes called Western chess, or international chess to distinguish it from related games such as xiangqi. The current form of the game emerged in Southern Europe during the second half of the 15th century after evolving from the medieval game of Shatranj (Arabic) or chatrang (Persian), which in turn evolved from the ancient Indian game, Chaturanga. Today, chess is one of the world's most popular games, played by millions of people worldwide.
+            </p>
             <p class="mb-0">
               Chess is an abstract strategy game and involves no hidden information. It is played on a square chessboard with 64 squares arranged in an eight-by-eight grid. At the start, each player (one controlling the white pieces, the other controlling the black pieces) controls sixteen pieces: one king, one queen, two rooks, two knights, two bishops, and eight pawns. The object of the game is to checkmate the opponent's king, whereby the king is under immediate attack (in "check") and there is no way for it to escape. There are also several ways a game can end in a draw.
             </p>
