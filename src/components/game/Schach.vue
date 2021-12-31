@@ -16,7 +16,7 @@
         <tr v-for="rowIndex in 8" :key="rowIndex" class="chess_row">
 
           <td class="chess_cell number_cell">{{ rowIndex }}</td>
-          <td v-for="columnIndex in 8" :key="columnIndex" class="chess_cell chess_piece" :id="convertIndizesToString(rowIndex,columnIndex)" value="">
+          <td v-for="columnIndex in 8" :set="id = convertIndizesToString(rowIndex,columnIndex)"  :key="columnIndex" class="chess_cell chess_piece" value="">
             <!--
             <template v-if="columnIndex === 0">
 
@@ -25,9 +25,9 @@
 
             </template>
             <img src="../../assets/images/pieces2/knight-white.png" alt="">
-
+            <Piece :ref="convertIndizesToString(rowIndex,columnIndex)" class="piece_component" :id="convertIndizesToString(rowIndex,columnIndex)" value=""></Piece>
             -->
-
+            <Piece :id="id" class="piece_component" :color="getPropertById(id, 'color')" :type="getPropertById(id, 'type')" svg-color="" :value="getPropertById(id, 'figure')"></Piece>
           </td>
         </tr>
       </table>
@@ -174,11 +174,12 @@
 import {webSocketMixin} from "@/mixins/webSocketMixin";
 import $ from 'jquery'
 import Modal from "@/components/shared/Modal";
+import Piece from "@/components/game/pieces/Piece";
 
 
 export default {
   name: "Schach",
-  components: {Modal},
+  components: {Piece, Modal},
   mixins: [webSocketMixin],
   data: function() {
     return {
@@ -191,6 +192,8 @@ export default {
       moveFrom: '',
       showGameOverModal: false,
       showConvertPawnModal: false,
+      piecesArray: undefined,
+      loaded: false,
     }
   },
   created: function () {
@@ -198,7 +201,7 @@ export default {
 
     this.setOnMessage(this.reactToWebSocketMessage);
 
-    //ToDo: Better solution for this more in harmony with Vue
+    //ToDo: Better solution for this, more in harmony with Vue
     document.addEventListener('click', this.move);
   },
   methods: {
@@ -211,8 +214,11 @@ export default {
 
       switch (event) {
         case "GameFieldChanged":
-          //console.log(eventData)
+          this.loaded = false;
+          console.log(eventData)
+          this.piecesArray = eventData;
           this.loadGame(eventData);
+          this.loaded = true;
           break;
         case "StatusChanged":
           this.setStatus(eventData);
@@ -229,13 +235,31 @@ export default {
         }
         const match = gameField.filter(piece => piece.coordinate === cell.id);
         if (match.length) {
-          cell.textContent = match[0].figure;
-          cell.setAttribute("value", match[0].figure);
+          const piece = match[0];
+
+
+          cell.setAttribute("value", piece.figure);
+
+          /*
+          const div = document.createElement('div');
+          cell.appendChild(div);
+          createApp(Piece, {color: piece.color, type: piece.type}).mount(div)
+          cell.innerHTML =
+          `<Piece class="piece_component" color="${piece.color}" type="${piece.type}" svg-color="" id="${cell.id}" value="${piece.figure}"></Piece>`
+           */
         } else {
           cell.textContent = " ";
           cell.setAttribute("value", " ");
         }
       })
+    },
+    getPropertById: function (id, type) {
+      if (!this.piecesArray) {
+        return " ";
+      }
+      const match = this.piecesArray.filter(piece => piece.coordinate === id)[0];
+
+      return match ? match[type] : " ";
     },
     setStatus: function (status) {
       /// RUNNING = 0, CHECKED = 1, CHECKMATE = 2, MOVE_ILLEGAL = 3, PAWN_REACHED_END = 4
@@ -372,7 +396,6 @@ export default {
           this.suggestWhitePawnMoves(targetID, color);
           break;
         default: return;
-
       }
     },
     suggestKingMoves: function (id, color) {
@@ -594,7 +617,7 @@ export default {
       }
     },
     removeAllSuggestions: function() {
-      $(".chess_piece").removeClass("suggestion-green").removeClass("suggestion-red")
+      $(".piece_component").removeClass("suggestion-green").removeClass("suggestion-red")
     },
 
 
@@ -783,6 +806,11 @@ label {
   &:hover {
     transform: scale(1.05);
   }
+}
+
+.piece_component {
+  width: 100%;
+  height: 100%;
 }
 
 </style>
