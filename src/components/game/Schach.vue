@@ -404,10 +404,54 @@ export default {
       // King can move one cell in each direction
       const aboveCell = idNumber + 10;
       const belowCell = idNumber - 10;
+
       const cellArray = [
         aboveCell, belowCell, aboveCell - 1, aboveCell + 1, belowCell - 1,
         belowCell + 1, idNumber - 1, idNumber + 1
       ]
+
+      if (idNumber === 85) {
+        const rook1 = document.getElementById("88").getAttribute('value');
+        const fieldBetween1 = document.getElementById("86").getAttribute('value');
+        const fieldBetween2 = document.getElementById("87").getAttribute('value');
+
+        const rook2 = document.getElementById("81").getAttribute('value');
+        const fieldBetween3 = document.getElementById("82").getAttribute('value');
+        const fieldBetween4 = document.getElementById("83").getAttribute('value');
+        const fieldBetween5 = document.getElementById("84").getAttribute('value');
+
+        if (rook1 === "♖" && fieldBetween1 === " " && fieldBetween2 === " ") {
+          // possible short rochade
+          this.setSuggestionColorByID("87", color);
+        }
+        if (rook2 === "♖" && fieldBetween3 === " " && fieldBetween4 === " "&& fieldBetween5 === " ") {
+          // possible long rochade
+          this.setSuggestionColorByID("83", color);
+        }
+      }
+
+
+      if (idNumber === 15) {
+        const rook1 = document.getElementById("18").getAttribute('value');
+        const fieldBetween1 = document.getElementById("16").getAttribute('value');
+        const fieldBetween2 = document.getElementById("17").getAttribute('value');
+
+        const rook2 = document.getElementById("11").getAttribute('value');
+        const fieldBetween3 = document.getElementById("12").getAttribute('value');
+        const fieldBetween4 = document.getElementById("13").getAttribute('value');
+        const fieldBetween5 = document.getElementById("14").getAttribute('value');
+
+
+        if (rook1 === "♜" && fieldBetween1 === " " && fieldBetween2 === " ") {
+          // possible short rochade
+          this.setSuggestionColorByID("17", color);
+        }
+        if (rook2 === "♜" && fieldBetween3 === " " && fieldBetween4 === " "&& fieldBetween5 === " ") {
+          // possible long rochade
+          this.setSuggestionColorByID("13", color);
+        }
+      }
+
       for (let index in cellArray) {
         const idString = cellArray[index].toString();
         this.setSuggestionColorByID(idString, color);
