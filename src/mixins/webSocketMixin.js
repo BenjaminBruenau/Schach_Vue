@@ -10,7 +10,7 @@ export const webSocketMixin = {
                 console.log("[WebSocket] Web Socket already exists")
                 return;
             }
-            this.webSocket = new WebSocket("ws://localhost:9000/websocket")
+            this.webSocket = new WebSocket("ws://138.68.78.124:9000/websocket")
 
             this.webSocket.onopen = () => {
                 console.log("[WebSocket] Connected to WebSocket: ", this.webSocket.url);
