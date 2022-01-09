@@ -1,10 +1,10 @@
-name: Build & Deploy
+name: CI & CD Pipeline
 on:
   push:
     branches: [master]
 
 jobs:
-  deploy:
+  build_test_deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -15,7 +15,9 @@ jobs:
           node-version: 14
       - name: Installing project dependencies
         run: npm install
-      - name: Building the project
+      - name: Running Tests
+        run: npm test
+      - name: Building Dist
         run: npm run build
       - name: Deploy App To Digital Ocean (via scp)
         uses: appleboy/scp-action@master
