@@ -3,7 +3,7 @@
   <!-- BLACK -->
 
     <!-- King: -->
-    <svg v-if="color === 'Black' && type === 'King'" xmlns="http://www.w3.org/2000/svg" version="1.1" width="45" height="45">
+    <svg v-if="color === 'Black' && type === 'King'" xmlns="http://www.w3.org/2000/svg" version="1.1" class="svg-piece" viewBox="0 0 45 45">
       <g style="fill:none; fill-opacity:1; fill-rule:evenodd; stroke:#000000; stroke-width:1.5; stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4; stroke-dasharray:none; stroke-opacity:1;">
         <path d="M 22.5,11.63 L 22.5,6" style="fill:none; stroke:#000000; stroke-linejoin:miter;" id="path6570"/>
         <path d="M 22.5,25 C 22.5,25 27,17.5 25.5,14.5 C 25.5,14.5 24.5,12 22.5,12 C 20.5,12 19.5,14.5 19.5,14.5 C 18,17.5 22.5,25 22.5,25" style="fill:#000000;fill-opacity:1; stroke-linecap:butt; stroke-linejoin:miter;"/>
@@ -15,8 +15,7 @@
     </svg>
 
     <!-- Queen -->
-    <svg v-if="color === 'Black' && type === 'Queen'" xmlns="http://www.w3.org/2000/svg" version="1.1" width="45"
-         height="45">
+    <svg v-if="color === 'Black' && type === 'Queen'" xmlns="http://www.w3.org/2000/svg" version="1.1" class="svg-piece" viewBox="0 0 45 45">
       <g style="fill:#000000;stroke:#000000;stroke-width:1.5; stroke-linecap:round;stroke-linejoin:round">
 
         <path d="M 9,26 C 17.5,24.5 30,24.5 36,26 L 38.5,13.5 L 31,25 L 30.7,10.9 L 25.5,24.5 L 22.5,10 L 19.5,24.5 L 14.3,10.9 L 14,25 L 6.5,13.5 L 9,26 z"
@@ -41,7 +40,7 @@
     </svg>
 
     <!-- Rook: -->
-    <svg v-if="color === 'Black' && type === 'Rook'" xmlns="http://www.w3.org/2000/svg" version="1.1" width="45" height="45">
+    <svg v-if="color === 'Black' && type === 'Rook'" xmlns="http://www.w3.org/2000/svg" version="1.1" class="svg-piece" viewBox="0 0 45 45">
       <g style="opacity:1; fill:#000000; fill-opacity:1; fill-rule:evenodd; stroke:#000000; stroke-width:1.5; stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4; stroke-dasharray:none; stroke-opacity:1;" transform="translate(0,0.3)">
         <path
             d="M 9,39 L 36,39 L 36,36 L 9,36 L 9,39 z "
@@ -80,7 +79,7 @@
     </svg>
 
     <!-- Bishop: -->
-    <svg v-if="color === 'Black' && type === 'Bishop'" xmlns="http://www.w3.org/2000/svg" version="1.1" width="45" height="45">
+    <svg v-if="color === 'Black' && type === 'Bishop'" xmlns="http://www.w3.org/2000/svg" version="1.1" class="svg-piece" viewBox="0 0 45 45">
       <g style="opacity:1; fill:none; fill-rule:evenodd; fill-opacity:1; stroke:#000000; stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; stroke-miterlimit:4; stroke-dasharray:none; stroke-opacity:1;" transform="translate(0,0.6)">
         <g style="fill:#000000; stroke:#000000; stroke-linecap:butt;">
           <path d="M 9,36 C 12.39,35.03 19.11,36.43 22.5,34 C 25.89,36.43 32.61,35.03 36,36 C 36,36 37.65,36.54 39,38 C 38.32,38.97 37.35,38.99 36,38.5 C 32.61,37.53 25.89,38.96 22.5,37.5 C 19.11,38.96 12.39,37.53 9,38.5 C 7.65,38.99 6.68,38.97 6,38 C 7.35,36.54 9,36 9,36 z"/>
@@ -92,7 +91,7 @@
     </svg>
 
     <!-- Knight: -->
-    <svg v-if="color === 'Black' && type === 'Knight'" xmlns="http://www.w3.org/2000/svg" version="1.1" width="45" height="45">
+    <svg v-if="color === 'Black' && type === 'Knight'" xmlns="http://www.w3.org/2000/svg" version="1.1" class="svg-piece" viewBox="0 0 45 45">
       <g style="opacity:1; fill:none; fill-opacity:1; fill-rule:evenodd; stroke:#000000; stroke-width:1.5; stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4; stroke-dasharray:none; stroke-opacity:1;" transform="translate(0,0.3)">
         <path
             d="M 22,10 C 32.5,11 38.5,18 38,39 L 15,39 C 15,30 25,32.5 23,18"
@@ -114,7 +113,7 @@
     </svg>
 
     <!-- Pawn: -->
-    <svg v-if="color === 'Black' && type === 'Pawn'" xmlns="http://www.w3.org/2000/svg" version="1.1" width="45" height="45">
+    <svg v-if="color === 'Black' && type === 'Pawn'" xmlns="http://www.w3.org/2000/svg" version="1.1" class="svg-piece" viewBox="0 0 45 45">
       <path d="m 22.5,9 c -2.21,0 -4,1.79 -4,4 0,0.89 0.29,1.71 0.78,2.38 C 17.33,16.5 16,18.59 16,21 c 0,2.03 0.94,3.84 2.41,5.03 C 15.41,27.09 11,31.58 11,39.5 H 34 C 34,31.58 29.59,27.09 26.59,26.03 28.06,24.84 29,23.03 29,21 29,18.59 27.67,16.5 25.72,15.38 26.21,14.71 26.5,13.89 26.5,13 c 0,-2.21 -1.79,-4 -4,-4 z" style="opacity:1; fill:#000000; fill-opacity:1; fill-rule:nonzero; stroke:#000000; stroke-width:1.5; stroke-linecap:round; stroke-linejoin:miter; stroke-miterlimit:4; stroke-dasharray:none; stroke-opacity:1;"/>
     </svg>
 
@@ -122,7 +121,7 @@
   <!-- WHITE -->
 
     <!-- King: -->
-    <svg v-if="color === 'White' && type === 'King'" xmlns="http://www.w3.org/2000/svg" version="1.1" width="45" height="45">
+    <svg v-if="color === 'White' && type === 'King'" xmlns="http://www.w3.org/2000/svg" version="1.1" class="svg-piece" viewBox="0 0 45 45">
       <g style="fill:none; fill-opacity:1; fill-rule:evenodd; stroke:#000000; stroke-width:1.5; stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4; stroke-dasharray:none; stroke-opacity:1;">
         <path d="M 22.5,11.63 L 22.5,6" style="fill:none; stroke:#000000; stroke-linejoin:miter;"/>
         <path d="M 20,8 L 25,8" style="fill:none; stroke:#000000; stroke-linejoin:miter;"/>
@@ -135,7 +134,7 @@
     </svg>
 
     <!-- Queen: -->
-    <svg v-if="color === 'White' && type === 'Queen'"  xmlns="http://www.w3.org/2000/svg" version="1.1" width="45" height="45">
+    <svg v-if="color === 'White' && type === 'Queen'"  xmlns="http://www.w3.org/2000/svg" version="1.1" class="svg-piece" viewBox="0 0 45 45">
       <g style="fill:#ffffff;stroke:#000000;stroke-width:1.5;stroke-linejoin:round">
         <path d="M 9,26 C 17.5,24.5 30,24.5 36,26 L 38.5,13.5 L 31,25 L 30.7,10.9 L 25.5,24.5 L 22.5,10 L 19.5,24.5 L 14.3,10.9 L 14,25 L 6.5,13.5 L 9,26 z"/>
         <path d="M 9,26 C 9,28 10.5,28 11.5,30 C 12.5,31.5 12.5,31 12,33.5 C 10.5,34.5 11,36 11,36 C 9.5,37.5 11,38.5 11,38.5 C 17.5,39.5 27.5,39.5 34,38.5 C 34,38.5 35.5,37.5 34,36 C 34,36 34.5,34.5 33,33.5 C 32.5,31 32.5,31.5 33.5,30 C 34.5,28 36,28 36,26 C 27.5,24.5 17.5,24.5 9,26 z"/>
@@ -150,7 +149,7 @@
     </svg>
 
     <!-- Rook: -->
-    <svg v-if="color === 'White' && type === 'Rook'" xmlns="http://www.w3.org/2000/svg" version="1.1" width="45" height="45">
+    <svg v-if="color === 'White' && type === 'Rook'" xmlns="http://www.w3.org/2000/svg" version="1.1" class="svg-piece" viewBox="0 0 45 45">
       <g style="opacity:1; fill:#ffffff; fill-opacity:1; fill-rule:evenodd; stroke:#000000; stroke-width:1.5; stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4; stroke-dasharray:none; stroke-opacity:1;" transform="translate(0,0.3)">
         <path
             d="M 9,39 L 36,39 L 36,36 L 9,36 L 9,39 z "
@@ -175,7 +174,7 @@
     </svg>
 
     <!-- Bishop: -->
-    <svg v-if="color === 'White' && type === 'Bishop'" xmlns="http://www.w3.org/2000/svg" version="1.1" width="45" height="45">
+    <svg v-if="color === 'White' && type === 'Bishop'" xmlns="http://www.w3.org/2000/svg" version="1.1" class="svg-piece" viewBox="0 0 45 45">
       <g style="opacity:1; fill:none; fill-rule:evenodd; fill-opacity:1; stroke:#000000; stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; stroke-miterlimit:4; stroke-dasharray:none; stroke-opacity:1;" transform="translate(0,0.6)">>
         <g style="fill:#ffffff; stroke:#000000; stroke-linecap:butt;">
           <path d="M 9,36 C 12.39,35.03 19.11,36.43 22.5,34 C 25.89,36.43 32.61,35.03 36,36 C 36,36 37.65,36.54 39,38 C 38.32,38.97 37.35,38.99 36,38.5 C 32.61,37.53 25.89,38.96 22.5,37.5 C 19.11,38.96 12.39,37.53 9,38.5 C 7.65,38.99 6.68,38.97 6,38 C 7.35,36.54 9,36 9,36 z"/>
@@ -187,7 +186,7 @@
     </svg>
 
     <!-- Knight: -->
-    <svg v-if="color === 'White' && type === 'Knight'" xmlns="http://www.w3.org/2000/svg" version="1.1" width="45" height="45">
+    <svg v-if="color === 'White' && type === 'Knight'" xmlns="http://www.w3.org/2000/svg" version="1.1" class="svg-piece" viewBox="0 0 45 45">
       <g style="opacity:1; fill:none; fill-opacity:1; fill-rule:evenodd; stroke:#000000; stroke-width:1.5; stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4; stroke-dasharray:none; stroke-opacity:1;" transform="translate(0,0.3)">
         <path
             d="M 22,10 C 32.5,11 38.5,18 38,39 L 15,39 C 15,30 25,32.5 23,18"
@@ -206,7 +205,8 @@
     </svg>
 
     <!--Pawn:-->
-    <svg v-if="color === 'White' && type === 'Pawn'" xmlns="http://www.w3.org/2000/svg" version="1.1" width="45" height="45" viewBox="0 0 45 45">
+
+    <svg v-if="color === 'White' && type === 'Pawn'" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 45 45" class="svg-piece">
       <path d="m 22.5,9 c -2.21,0 -4,1.79 -4,4 0,0.89 0.29,1.71 0.78,2.38 C 17.33,16.5 16,18.59 16,21 c 0,2.03 0.94,3.84 2.41,5.03 C 15.41,27.09 11,31.58 11,39.5 H 34 C 34,31.58 29.59,27.09 26.59,26.03 28.06,24.84 29,23.03 29,21 29,18.59 27.67,16.5 25.72,15.38 26.21,14.71 26.5,13.89 26.5,13 c 0,-2.21 -1.79,-4 -4,-4 z" style="opacity:1; fill:#ffffff; fill-opacity:1; fill-rule:nonzero; stroke:#000000; stroke-width:1.5; stroke-linecap:round; stroke-linejoin:miter; stroke-miterlimit:4; stroke-dasharray:none; stroke-opacity:1;"/>
     </svg>
   </div>
@@ -228,5 +228,9 @@ svg {
   pointer-events: none;
   width:  auto;
   height: auto;
+}
+.svg-piece {
+  width: 80%;
+  height: 80%;
 }
 </style>

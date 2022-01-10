@@ -697,6 +697,12 @@ export default {
   padding: 2em;
 }
 
+@media screen and (min-width: 2000px){
+  .game_container {
+    font-size: 1vw;
+  }
+}
+
 .game_field_container {
   display: inline-block;
   margin-right: 2em;
