@@ -10,7 +10,7 @@ export const webSocketMixin = {
                 console.log("[WebSocket] Web Socket already exists")
                 return;
             }
-            this.webSocket = new WebSocket("ws://gentle-ravine-43489.herokuapp.com/websocket")
+            this.webSocket = new WebSocket("wss://gentle-ravine-43489.herokuapp.com/websocket")
 
             this.webSocket.onopen = () => {
                 console.log("[WebSocket] Connected to WebSocket: ", this.webSocket.url);
