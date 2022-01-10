@@ -28,4 +28,4 @@ jobs:
           PASSPHRASE: ${{ secrets.SSH_PASSWORD }}
         with:
           source: "/home/runner/work/Schach_Vue/Schach_Vue/dist/"
-          target: "/var/www/html"
+          target: "/var/www/schach-vue/html"
