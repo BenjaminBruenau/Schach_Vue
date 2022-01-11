@@ -2,6 +2,8 @@ import {createApp, h} from 'vue'
 import App from './App.vue'
 import router from './router'
 
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
 
 // Bootstrap
 import "bootstrap/dist/css/bootstrap.min.css"
@@ -23,3 +25,30 @@ app.use(Quasar, quasarUserOptions);
 //app.use(BootstrapVue)
 
 app.mount('#app')
+
+
+/// FIREBASE
+const firebaseConfig = {
+
+  apiKey: "AIzaSyDZZM_fOa2jnbtwcVZK_YgEP5I4AWgtFBU",
+
+  authDomain: "schach-vue.firebaseapp.com",
+
+  projectId: "schach-vue",
+
+  storageBucket: "schach-vue.appspot.com",
+
+  messagingSenderId: "8591796491",
+
+  appId: "1:8591796491:web:bca54d743c688ebb1c9a0e",
+
+  measurementId: "G-G12H9CMHL7"
+
+};
+
+
+// Initialize Firebase
+
+const firebaseApp = initializeApp(firebaseConfig);
+
+getAnalytics(firebaseApp);
