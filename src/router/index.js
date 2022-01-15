@@ -5,6 +5,7 @@ import PlayerStats from '@/components/statistics/PlayerStats';
 import Store from "@/components/shop/Store";
 import Login from "@/components/authentication/Login";
 import Register from "@/components/authentication/Register";
+import {getAuth} from "firebase/auth";
 
 
 const routes = [
@@ -77,10 +78,12 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   document.title = to.name || 'Chess | Not Found'
   if (to.matched.some((record) => record.meta.requiresAuth)) {
-    console.log('Requires Login!');
-    const i = 1;
-    if (i == 1) {
+    const auth = getAuth();
+    if (!auth.currentUser) {
+      console.log('You need to be logged in!')
       next('/login')
+    } else {
+      next();
     }
   } else {
     next();

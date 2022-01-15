@@ -3,52 +3,126 @@
     <div class="body d-md-flex align-items-center justify-content-between">
       <div class="box-1 mt-md-0 mt-5"> <img src="https://images.pexels.com/photos/2033997/pexels-photo-2033997.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500" class="" alt=""> </div>
       <div class=" box-2 d-flex flex-column h-100">
-        <div class="mt-5">
+        <div class="mt-1">
           <p class="mb-1 h-1">Login </p>
           <div class="d-flex flex-column ">
             <p class="text-muted mb-2">Continue with...</p>
-            <div class="d-flex align-items-center"> <a href="#" class="box me-2 selectio"> <span class="fab fa-facebook-f mb-2"></span>
-              <p class="mb-0">Facebook</p>
-            </a> <a href="#" class="box me-2"> <span class="fab fa-google mb-2"></span>
-              <p class="mb-0">Google</p>
-            </a> <a href="#" class="box"> <span class="far fa-envelope mb-2"></span>
-              <p class="mb-0">Email</p>
-            </a> </div>
+            <div class="d-flex align-items-center">
+              <a href="#" class="box me-2 selectio"> <span class="fab fa-facebook-f mb-2"></span>
+                <p class="mb-0">Facebook</p>
+              </a>
+              <a @click="googleLogin()" href="#" class="box me-2"> <span class="fab fa-google mb-2"></span>
+                <p class="mb-0">Google</p>
+              </a>
+              <a href="#" class="box"> <span class="fab fa-github mb-2"></span>
+                <p class="mb-0">Github</p>
+              </a>
+            </div>
 
             <div class="card-body">
               <form>
 
                 <div class="input-group mb-3">
                   <span class="input-group-text"><i class="fas fa-user"></i></span>
-                  <input type="text" class="form-control" placeholder="Email" aria-label="Username" aria-describedby="basic-addon1">
+                  <input type="text" class="form-control" placeholder="Email" aria-label="Username" aria-describedby="basic-addon1" v-model="user.email" required>
                 </div>
                 <div class="input-group mb-3">
                   <span class="input-group-text"><i class="fas fa-key"></i></span>
-                  <input type="Password" class="form-control" placeholder="Password">
+                  <input type="Password" class="form-control" placeholder="Password" v-model="user.password" required>
                 </div>
 
               </form>
+
+              <button class="btn btn-primary" @click="loginRegular()">Login<span class="fas fa-chevron-right ms-1"></span></button>
             </div>
 
-            <div class="mt-3">
+            <div class="mt-1">
               <p class="mb-0 text-muted">Don't have an account yet?</p>
               <a class="btn btn-primary" href="/register">Sign Up<span class="fas fa-chevron-right ms-1"></span></a>
+
             </div>
           </div>
         </div>
-        <!--
-        <div class="mt-auto">
-          <p class="footer text-muted mb-0 mt-md-0 mt-4">By registering you agree with our <span class="p-color me-1">terms and conditions</span>and <span class="p-color ms-1">privacy policy</span> </p>
-        </div>
-        -->
       </div>
     </div>
+    <div v-if="loginSuccess" class="alert alert-success alert-dismissible fade show mt-3" role="alert" >
+      <strong>Successfully Logged into Your Account</strong> <br>
+      Redirecting to Game now...
+    </div>
+    <div v-if="loginError" class="alert alert-danger alert-dismissible fade show mt-3" role="alert" >
+      Error while trying to login into Your Account <br> {{ errorMessage }}
+    </div>
+    <div v-if="credentialsError" class="alert alert-danger alert-dismissible fade show mt-3">
+      Email or Password missing!
+    </div>
   </div>
+
 </template>
 
 <script>
+import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import {sleep} from "@/main";
+
 export default {
-  name: "Login"
+  name: "Login",
+  data() {
+    return {
+      user: {
+        email: '',
+        password: ''
+      },
+      loginSuccess: false,
+      loginError: false,
+      errorMessage: '',
+      credentialsError: false,
+    };
+  },
+  methods: {
+    loginRegular() {
+      if (!this.user.email || !this.user.password) {
+        this.credentialsError = true;
+        console.log("Email and/or Password missing!");
+        return;
+      }
+      this.credentialsError = false;
+      this.loginError = false;
+      this.loginSuccess = false;
+
+      const auth = getAuth();
+
+      signInWithEmailAndPassword(auth, this.email, this.password)
+          .then(() => {
+            this.loginSuccess = true;
+            sleep(2000).then(() => {
+              this.$router.push('/schach');
+            });
+          })
+          .catch(error => {
+            this.loginError = true;
+            this.errorMessage = error.message;
+            console.log(error);
+          });
+    },
+    googleLogin() {
+      const googleProvider = new GoogleAuthProvider();
+      const auth = getAuth();
+
+      signInWithPopup(auth, googleProvider)
+          .then(() => {
+            this.loginSuccess = true;
+            sleep(2000).then(() => {
+              console.log("REDIER>CTWESDFCQW")
+              this.$router.replace('/schach');
+            });
+          })
+          .catch(error => {
+            this.loginError = true;
+            this.errorMessage = error.message;
+            console.log(error);
+          });
+
+    }
+  },
 }
 </script>
 
