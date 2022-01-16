@@ -7,16 +7,17 @@
           <p class="mb-1 h-1">Login </p>
           <div class="d-flex flex-column ">
             <p class="text-muted mb-2">Continue with...</p>
-            <div class="d-flex align-items-center">
-              <a href="#" class="box me-2 selectio"> <span class="fab fa-facebook-f mb-2"></span>
-                <p class="mb-0">Facebook</p>
-              </a>
+            <div class="d-flex align-items-center" style="justify-content: center; align-items: center">
               <a @click="googleLogin()" href="#" class="box me-2"> <span class="fab fa-google mb-2"></span>
                 <p class="mb-0">Google</p>
               </a>
-              <a href="#" class="box"> <span class="fab fa-github mb-2"></span>
+              <a @click="githubLogin()" href="#" class="box"> <span class="fab fa-github mb-2"></span>
                 <p class="mb-0">Github</p>
               </a>
+            </div>
+
+            <div>
+              <p class="text-muted mb-2">Or Login with a regular Account</p>
             </div>
 
             <div class="card-body">
@@ -33,7 +34,7 @@
 
               </form>
 
-              <button class="btn btn-primary" @click="loginRegular()">Login<span class="fas fa-chevron-right ms-1"></span></button>
+              <button class="btn btn-primary" @click="regularLogin()">Login<span class="fas fa-chevron-right ms-1"></span></button>
             </div>
 
             <div class="mt-1">
@@ -60,7 +61,7 @@
 </template>
 
 <script>
-import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, GithubAuthProvider, updateProfile } from 'firebase/auth';
 import {sleep} from "@/main";
 
 export default {
@@ -78,7 +79,7 @@ export default {
     };
   },
   methods: {
-    loginRegular() {
+    regularLogin() {
       if (!this.user.email || !this.user.password) {
         this.credentialsError = true;
         console.log("Email and/or Password missing!");
@@ -89,12 +90,17 @@ export default {
       this.loginSuccess = false;
 
       const auth = getAuth();
-
-      signInWithEmailAndPassword(auth, this.email, this.password)
+      console.log("MAIL: ", this.user.email)
+      signInWithEmailAndPassword(auth, this.user.email, this.user.password)
           .then(() => {
-            this.loginSuccess = true;
-            sleep(2000).then(() => {
-              this.$router.push('/schach');
+            updateProfile(auth.currentUser, {
+              displayName: this.user.email,
+              photoURL: 'https://e7.pngegg.com/pngimages/42/453/png-clipart-chess-piece-king-queen-staunton-chess-set-chess-king-queen.png'
+            }).then(() => {
+              this.loginSuccess = true;
+              sleep(2000).then(() => {
+                this.$router.push('/schach');
+              });
             });
           })
           .catch(error => {
@@ -106,12 +112,18 @@ export default {
     googleLogin() {
       const googleProvider = new GoogleAuthProvider();
       const auth = getAuth();
-
-      signInWithPopup(auth, googleProvider)
+      this.signIn(auth, googleProvider)
+    },
+    githubLogin() {
+      const githubProvider = new GithubAuthProvider();
+      const auth = getAuth();
+      this.signIn(auth, githubProvider);
+    },
+    signIn(auth, provider) {
+      signInWithPopup(auth, provider)
           .then(() => {
             this.loginSuccess = true;
             sleep(2000).then(() => {
-              console.log("REDIER>CTWESDFCQW")
               this.$router.replace('/schach');
             });
           })
@@ -120,7 +132,6 @@ export default {
             this.errorMessage = error.message;
             console.log(error);
           });
-
     }
   },
 }

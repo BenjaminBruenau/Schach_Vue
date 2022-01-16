@@ -18,7 +18,7 @@
             <b class="caret"></b>
           </a>
           <div v-if="dropdownMenu" class="dropdown-menu">
-
+            <p v-if="userName" class="text-muted mb-2 user_name">{{ userName }}</p>
             <a href="#" @click="logout()" class="dropdown-item"><i class="material-icons">&#xE8AC;</i> Logout</a>
           </div>
         </div>
@@ -57,6 +57,7 @@ export default {
       dropdownMenu: false,
       loggedIn: false,
       userProfilepic: '',
+      userName: '',
     }
   },
   watch:{
@@ -93,6 +94,7 @@ export default {
 
       signOut(auth)
           .then(() => {
+            this.userName = '';
             this.$router.push('login');
             this.dropdownMenu = false;
           })
@@ -109,14 +111,18 @@ export default {
         this.userProfilepic = '';
         return;
       }
+
       this.loggedIn = true;
       user.providerData.forEach(profile => {
         //console.log("PHOTO: ", profile.photoURL)
         if (profile.photoURL) {
           this.userProfilepic = profile.photoURL
         }
+        if (profile.email) {
+          this.userName = profile.email;
+        }
       })
-    }
+    },
   }
 }
 </script>
@@ -132,6 +138,7 @@ export default {
 
 .dropdown-menu {
   display: block !important;
+  right: .01em !important;
 }
 .nav-link {
   color: whitesmoke !important;
@@ -141,6 +148,14 @@ export default {
   line-height: 16px;
   vertical-align: middle;
   margin-top: -2px;
+}
+
+.user_name {
+  font-size: .75em;
+  padding: .25rem;
+  color: #212529;
+  text-decoration: none;
+  background-color: transparent;
 }
 
 </style>

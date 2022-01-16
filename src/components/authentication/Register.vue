@@ -27,7 +27,11 @@
             <div class="mt-1">
               <button class="btn btn-primary" @click="submit()">Register<span class="fas fa-chevron-right ms-1"></span></button>
               <div v-if="registerSuccess" class="alert alert-success alert-dismissible fade show mt-3" role="alert" >
-                <strong>Successfully Registered Your Account</strong>
+                <strong>
+                  Successfully Registered Your Account.
+                  <br>
+                  Please Login with your new Account now
+                </strong>
               </div>
               <div v-if="registerError" class="alert alert-danger alert-dismissible fade show mt-3" role="alert" >
                 Error while trying to register your Account <br> {{ errorMessage }}
@@ -76,27 +80,23 @@ export default {
 
 
       createUserWithEmailAndPassword(auth, this.user.email, this.user.password)
-          .then((response) => {
-            response.user.updateProfile({
-              displayName: this.user.name
-            })
-                .then(() => {
-                  //alert('User successfully registered!')
-                  this.registerSuccess = true;
-                  this.user = {
-                    email: '',
-                    password: ''
-                  }
-                  sleep(2000).then(() => {
-                    this.$router.push('/login');
-                  });
-                });
-          })
-          .catch((err) => {
-            this.registerError = true;
-            this.errorMessage = err.message;
-            console.log(err);
+        .then(() => {
+          //alert('User successfully registered!')
+          this.registerSuccess = true;
+          this.user = {
+            email: '',
+            password: ''
+          }
+          sleep(2000).then(() => {
+            this.$router.push('/login');
           });
+
+        })
+        .catch((err) => {
+          this.registerError = true;
+          this.errorMessage = err.message;
+          console.log(err);
+        });
     }
   }
 }
