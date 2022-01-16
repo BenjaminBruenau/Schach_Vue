@@ -142,9 +142,7 @@ export default {
 
 * {
   margin: 0;
-  padding: 0;
   box-sizing: border-box;
-  font-family: 'Poppins', sans-serif
 }
 
 .container {
@@ -210,7 +208,7 @@ export default {
 .btn.btn-primary {
   background-color: transparent;
   color: #ee82ee;
-  border: 0px;
+  border: 0;
   padding: 0;
   font-size: 14px
 }
