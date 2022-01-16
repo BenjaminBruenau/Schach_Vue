@@ -5,12 +5,13 @@ export const webSocketMixin = {
         }
     },
     methods: {
-        connectToWebSocket: function () {
+        connectToWebSocket: function (userToken) {
             if (this.webSocket.readyState && this.webSocket.readyState === WebSocket.OPEN) {
                 console.log("[WebSocket] Web Socket already exists")
                 return;
             }
-            this.webSocket = new WebSocket("wss://schach-playserver.herokuapp.com/websocket")
+
+            this.webSocket = new WebSocket("wss://schach-playserver.herokuapp.com/websocket", [userToken]);
 
             this.webSocket.onopen = () => {
                 console.log("[WebSocket] Connected to WebSocket: ", this.webSocket.url);

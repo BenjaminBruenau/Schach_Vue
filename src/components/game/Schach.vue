@@ -175,6 +175,7 @@ import {webSocketMixin} from "@/mixins/webSocketMixin";
 import $ from 'jquery'
 import Modal from "@/components/shared/Modal";
 import Piece from "@/components/game/pieces/Piece";
+import {getAuth} from "firebase/auth";
 
 
 export default {
@@ -197,9 +198,13 @@ export default {
     }
   },
   created: function () {
-    this.connectToWebSocket();
-
-    this.setOnMessage(this.reactToWebSocketMessage);
+    const auth = getAuth();
+    if (auth.currentUser) {
+      auth.currentUser.getIdToken().then(token => {
+        this.connectToWebSocket(token);
+        this.setOnMessage(this.reactToWebSocketMessage);
+      })
+    }
 
     //ToDo: Better solution for this, more in harmony with Vue
     document.addEventListener('click', this.move);
