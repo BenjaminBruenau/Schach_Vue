@@ -1,5 +1,5 @@
 <template>
-  <!-- Responsive navbar-->
+
   <nav class="navbar navbar-expand-lg navbar-dark bg-black mb-5">
     <div class="container">
       <a class="navbar-brand fw-bold" href="/">
@@ -7,9 +7,7 @@
           <img src="../assets/images//chess-logo.webp" alt="" width="30" height="30" class="d-inline-block">
           <div>Chess</div>
         </div>
-
       </a>
-
       <div>
         <div class="nav-item dropdown">
           <a @click="toggleDropdown()" href="#" class="nav-item nav-link dropdown-toggle user-action">
@@ -22,25 +20,26 @@
             <a href="#" @click="logout()" class="dropdown-item"><i class="material-icons">&#xE8AC;</i> Logout</a>
           </div>
         </div>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"
-                v-on:click="openCollapsedNavbar">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar">
           <span class="navbar-toggler-icon"></span>
         </button>
-
       </div>
 
-      <div v-if="!collapsed" class="navbar-collapse" id="navbarSupportedContent">
+      <div class="navbar-collapse collapse" id="navbar">
         <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-start">
-          <li class="nav-item"><a class="nav-link" aria-current="page" href="/">Home</a></li>
-          <li class="nav-item"><a class="nav-link" href="/about">About</a></li>
-          <li class="nav-item"><a class="nav-link" href="/schach">Play</a></li>
-          <li class="nav-item"><a class="nav-link" href="/statistics">Statistics</a></li>
+          <li class="nav-item"><a class="nav-link nav_link" aria-current="page" href="/">Home</a></li>
+          <li class="nav-item"><a class="nav-link nav_link" href="/about">About</a></li>
+          <li class="nav-item"><a class="nav-link nav_link" href="/schach">Play</a></li>
+          <li class="nav-item"><a class="nav-link nav_link" href="/statistics">Statistics</a></li>
         </ul>
       </div>
 
+
+
     </div>
   </nav>
+
+
 
 </template>
 
@@ -53,7 +52,6 @@ export default {
   name: "Navbar",
   data: function() {
     return {
-      collapsed: true,
       dropdownMenu: false,
       loggedIn: false,
       userProfilepic: '',
@@ -78,10 +76,6 @@ export default {
 
   },
   methods: {
-    openCollapsedNavbar() {
-      this.collapsed = !this.collapsed;
-      console.log('Collapsed: ', this.collapsed)
-    },
     toggleDropdown: function () {
       this.dropdownMenu = !this.dropdownMenu;
     },
@@ -129,7 +123,7 @@ export default {
 
 <style scoped>
 
-.navbar img {
+.navbar .avatar {
   border-radius: 50%;
   width: 36px;
   height: 36px;
@@ -157,5 +151,16 @@ export default {
   text-decoration: none;
   background-color: transparent;
 }
+
+.nav_link {
+  transition: transform 0.5s ease;
+}
+
+.nav_link:hover {
+  position: relative;
+  transform: scale(1.1);
+}
+
+
 
 </style>

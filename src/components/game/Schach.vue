@@ -702,7 +702,7 @@ export default {
   padding: 2em;
 }
 
-@media screen and (min-width: 2000px){
+@media screen and (min-width: 1900px){
   .game_container {
     font-size: 1vw;
   }
