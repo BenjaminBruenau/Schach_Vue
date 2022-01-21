@@ -13,7 +13,7 @@ export const webSocketMixin = {
                 return;
             }
 
-            this.webSocket = new WebSocket("ws://localhost:9000/websocket", [userToken]);
+            this.webSocket = new WebSocket("wss://schach-playserver.herokuapp.com/websocket", [userToken]);
 
             this.webSocket.onopen = () => {
                 console.log("[WebSocket] Connected to WebSocket: ", this.webSocket.url);
