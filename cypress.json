@@ -1,4 +1,4 @@
 {
-  "baseUrl": "https://schach-vue.cf",
+  "baseUrl": "https://schach-vue.cf/",
   "pluginsFile": "tests/e2e/plugins/index.js"
 }
