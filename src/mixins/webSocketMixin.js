@@ -3,6 +3,7 @@ export const webSocketMixin = {
         return {
             webSocket: Object,
             timerId: 0,
+            firstLoad: true,
         }
     },
     methods: {
@@ -25,7 +26,12 @@ export const webSocketMixin = {
 
             this.webSocket.onerror = event => console.error(event);
 
-            this.webSocket.onclose = () => setTimeout(this.connectToWebSocket, 5000); console.log("[WebSocket] Reconnecting to WebSocket");
+            this.webSocket.onclose = () => {
+                this.firstLoad ? setTimeout(this.connectToWebSocket, 1000)
+                    : setTimeout(this.connectToWebSocket, 5000)
+                this.firstLoad = false;
+                console.log("[WebSocket] Reconnecting to WebSocket");
+            }
         },
         keepAlive: function () {
           const timeout = 20000; // 20s

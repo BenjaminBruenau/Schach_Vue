@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="body d-md-flex align-items-center justify-content-between">
-      <div class="box-1 mt-md-0 mt-5"> <img src="https://images.pexels.com/photos/2033997/pexels-photo-2033997.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500" class="" alt=""> </div>
+      <div class="box-1 mt-md-0 mt-5"> <img src="../../assets/images/login-background.jpeg" class="" alt=""> </div>
       <div class=" box-2 d-flex flex-column h-100">
         <div class="mt-1">
           <p class="mb-1 h-1">Login </p>
@@ -25,11 +25,11 @@
 
                 <div class="input-group mb-3">
                   <span class="input-group-text"><i class="fas fa-user"></i></span>
-                  <input type="text" class="form-control" placeholder="Email" aria-label="Username" aria-describedby="basic-addon1" v-model="user.email" required>
+                  <input data-cy="username" type="text" class="form-control" placeholder="Email" aria-label="Username" aria-describedby="basic-addon1" v-model="user.email" required>
                 </div>
                 <div class="input-group mb-3">
                   <span class="input-group-text"><i class="fas fa-key"></i></span>
-                  <input type="Password" class="form-control" placeholder="Password" v-model="user.password" required>
+                  <input data-cy="password" type="Password" class="form-control" placeholder="Password" aria-label="Password" v-model="user.password" required>
                 </div>
 
               </form>
@@ -98,7 +98,7 @@ export default {
               photoURL: 'https://e7.pngegg.com/pngimages/42/453/png-clipart-chess-piece-king-queen-staunton-chess-set-chess-king-queen.png'
             }).then(() => {
               this.loginSuccess = true;
-              sleep(2000).then(() => {
+              sleep(1000).then(() => {
                 this.$router.push('/schach');
               });
             });
@@ -123,7 +123,7 @@ export default {
       signInWithPopup(auth, provider)
           .then(() => {
             this.loginSuccess = true;
-            sleep(2000).then(() => {
+            sleep(1000).then(() => {
               this.$router.replace('/schach');
             });
           })

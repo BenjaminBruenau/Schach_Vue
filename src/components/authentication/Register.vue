@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="body d-md-flex align-items-center justify-content-between">
-      <div class="box-1 mt-md-0 mt-5"> <img src="https://images.pexels.com/photos/2033997/pexels-photo-2033997.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500" class="" alt=""> </div>
+      <div class="box-1 mt-md-0 mt-5"> <img src="../../assets/images/login-background.jpeg" class="" alt=""> </div>
       <div class=" box-2 d-flex flex-column h-100">
         <div class="mt-5">
           <p class="mb-1 h-1">Sign Up </p>
@@ -87,7 +87,7 @@ export default {
             email: '',
             password: ''
           }
-          sleep(2000).then(() => {
+          sleep(1000).then(() => {
             this.$router.push('/login');
           });
 
