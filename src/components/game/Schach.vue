@@ -36,6 +36,10 @@
 
 
     <div class="action_container">
+
+      <Graveyard v-bind:graveyard="graveyardWhite" class="mb-3"></Graveyard>
+
+
       <div class="king_piece">
         <b id="kingPiece" class="white">♔</b>
       </div>
@@ -49,7 +53,6 @@
           <button v-on:click="newGame" class="action-button new-game-button">New Game</button>
         </div>
 
-        <Graveyard :graveyard="graveyardBlack"></Graveyard>
 
 
         <!--
@@ -61,6 +64,8 @@
         -->
 
       </div>
+      <Graveyard v-bind:graveyard="graveyardBlack" class="mt-3"></Graveyard>
+
     </div>
 
 
@@ -169,7 +174,9 @@
 
   </div>
 
-
+  <div id="invalid-move-alert" class="alert alert-danger alert-dismissible fade show mt-3" role="alert" style="opacity: 0">
+    <strong>Invalid Move!</strong>
+  </div>
   <!-- <Toast v-bind:show="this.showToast" :toast-title="toastTitle" :toast-text="toastText" :color="playerColor"></Toast>-->
 
 
@@ -348,13 +355,10 @@ export default {
     reactToSpecialGameStatus: function (status) {
       // ToDo: Save Games (Local Storage)
       console.log('Special Status: ', status.statusID)
-      if (status.statusID === this.currentStatusID) {
-        return;
-      }
+
       this.currentStatusID = status.statusID;
 
 
-      this.closeInvalidMoveAlert();
       this.playerColor = status.player;
 
       if (status.statusID === 3) {
@@ -364,10 +368,7 @@ export default {
         return;
       }
       if (status.statusID === 1) {
-        console.log(status.player + " is Checked")
-        this.toastTitle = "Player Checked!";
-        this.toastText = "Player " + status.player + " is Checked";
-        this.toast.show();
+        $('#invalid-move-alert').text("Player " + status.player + " is Checked").css("opacity", "100");
         return;
       }
       if (status.statusID === 2) {
@@ -386,6 +387,7 @@ export default {
       }
     },
     closeInvalidMoveAlert: function () {
+      $('#invalid-move-alert').css("opacity", "0");
       this.toast.hide()
     },
     newGame: function () {
