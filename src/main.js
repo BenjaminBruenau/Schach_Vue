@@ -7,6 +7,7 @@ import { getAnalytics } from "firebase/analytics";
 
 // Bootstrap
 import "bootstrap/dist/css/bootstrap.min.css"
+import "bootstrap/dist/js/bootstrap.min"
 import "bootstrap"
 import { Quasar } from 'quasar'
 import quasarUserOptions from './quasar-user-options'

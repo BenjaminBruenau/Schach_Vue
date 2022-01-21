@@ -49,11 +49,16 @@
           <button v-on:click="newGame" class="action-button new-game-button">New Game</button>
         </div>
 
+        <Graveyard :graveyard="graveyardBlack"></Graveyard>
+
+
+        <!--
         <div class="buttons">
           <div class="text-white mb-1"><strong>Debug: </strong></div>
           <button v-on:click="triggerConvertPopup" class="action-button new-game-button mb-1">Convert Pawn</button>
           <button v-on:click="triggerGameOverPopup" class="action-button new-game-button mb-1">Game Over</button>
         </div>
+        -->
 
       </div>
     </div>
@@ -164,8 +169,41 @@
 
   </div>
 
-  <div id="invalid-move-alert" class="alert alert-danger alert-dismissible fade show mt-3" role="alert" style="opacity: 0">
-    <strong>Invalid Move!</strong>
+
+  <!-- <Toast v-bind:show="this.showToast" :toast-title="toastTitle" :toast-text="toastText" :color="playerColor"></Toast>-->
+
+
+
+  <div class="toast top-0 position-absolute p-3 end-0 mt-5" role="alert" id="toast" style="margin-right: 1em">
+    <div class="toast-header">
+      <svg v-if="playerColor === 'BLACK'" xmlns="http://www.w3.org/2000/svg" version="1.1" class="svg-piece toast_svg" viewBox="0 0 45 45" height="25" width="25">
+        <g style="fill:none; fill-opacity:1; fill-rule:evenodd; stroke:#000000; stroke-width:1.5; stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4; stroke-dasharray:none; stroke-opacity:1;">
+          <path d="M 22.5,11.63 L 22.5,6" style="fill:none; stroke:#000000; stroke-linejoin:miter;" id="path6570"/>
+          <path d="M 22.5,25 C 22.5,25 27,17.5 25.5,14.5 C 25.5,14.5 24.5,12 22.5,12 C 20.5,12 19.5,14.5 19.5,14.5 C 18,17.5 22.5,25 22.5,25" style="fill:#000000;fill-opacity:1; stroke-linecap:butt; stroke-linejoin:miter;"/>
+          <path d="M 12.5,37 C 18,40.5 27,40.5 32.5,37 L 32.5,30 C 32.5,30 41.5,25.5 38.5,19.5 C 34.5,13 25,16 22.5,23.5 L 22.5,27 L 22.5,23.5 C 20,16 10.5,13 6.5,19.5 C 3.5,25.5 12.5,30 12.5,30 L 12.5,37" style="fill:#000000; stroke:#000000;"/>
+          <path d="M 20,8 L 25,8" style="fill:none; stroke:#000000; stroke-linejoin:miter;"/>
+          <path d="M 32,29.5 C 32,29.5 40.5,25.5 38.03,19.85 C 34.15,14 25,18 22.5,24.5 L 22.5,26.6 L 22.5,24.5 C 20,18 10.85,14 6.97,19.85 C 4.5,25.5 13,29.5 13,29.5" style="fill:none; stroke:#ffffff;"/>
+          <path d="M 12.5,30 C 18,27 27,27 32.5,30 M 12.5,33.5 C 18,30.5 27,30.5 32.5,33.5 M 12.5,37 C 18,34 27,34 32.5,37" style="fill:none; stroke:#ffffff;"/>
+        </g>
+      </svg>
+      <svg v-if="playerColor === 'WHITE'" xmlns="http://www.w3.org/2000/svg" version="1.1" class="svg-piece toast_svg" viewBox="0 0 45 45" height="25" width="25">
+        <g style="fill:none; fill-opacity:1; fill-rule:evenodd; stroke:#000000; stroke-width:1.5; stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4; stroke-dasharray:none; stroke-opacity:1;">
+          <path d="M 22.5,11.63 L 22.5,6" style="fill:none; stroke:#000000; stroke-linejoin:miter;"/>
+          <path d="M 20,8 L 25,8" style="fill:none; stroke:#000000; stroke-linejoin:miter;"/>
+          <path d="M 22.5,25 C 22.5,25 27,17.5 25.5,14.5 C 25.5,14.5 24.5,12 22.5,12 C 20.5,12 19.5,14.5 19.5,14.5 C 18,17.5 22.5,25 22.5,25" style="fill:#ffffff; stroke:#000000; stroke-linecap:butt; stroke-linejoin:miter;"/>
+          <path d="M 12.5,37 C 18,40.5 27,40.5 32.5,37 L 32.5,30 C 32.5,30 41.5,25.5 38.5,19.5 C 34.5,13 25,16 22.5,23.5 L 22.5,27 L 22.5,23.5 C 20,16 10.5,13 6.5,19.5 C 3.5,25.5 12.5,30 12.5,30 L 12.5,37" style="fill:#ffffff; stroke:#000000;"/>
+          <path d="M 12.5,30 C 18,27 27,27 32.5,30" style="fill:none; stroke:#000000;"/>
+          <path d="M 12.5,33.5 C 18,30.5 27,30.5 32.5,33.5" style="fill:none; stroke:#000000;"/>
+          <path d="M 12.5,37 C 18,34 27,34 32.5,37" style="fill:none; stroke:#000000;"/>
+        </g>
+      </svg>
+      <strong class="me-auto">{{ toastTitle }}</strong>
+      <small>now</small>
+      <button type="button" class="btn-close" data-bs-dismiss="toast" ></button>
+    </div>
+    <div class="toast-body">
+      {{ toastText }}
+    </div>
   </div>
 </div>
 </template>
@@ -176,11 +214,12 @@ import $ from 'jquery'
 import Modal from "@/components/shared/Modal";
 import Piece from "@/components/game/pieces/Piece";
 import {getAuth} from "firebase/auth";
-
+import { Toast } from 'bootstrap'
+import Graveyard from "@/components/game/graveyard/Graveyard";
 
 export default {
   name: "Schach",
-  components: {Piece, Modal},
+  components: {Graveyard, Piece, Modal},
   mixins: [webSocketMixin],
   data: function() {
     return {
@@ -195,6 +234,14 @@ export default {
       showConvertPawnModal: false,
       piecesArray: undefined,
       loaded: false,
+      showToast: false,
+      toastTitle: '',
+      toastText: '',
+      toast: null,
+      playerColor: 'White',
+      currentStatusID: 69,
+      graveyardBlack: [],
+      graveyardWhite: [],
     }
   },
   created: function () {
@@ -209,19 +256,28 @@ export default {
     //ToDo: Better solution for this, more in harmony with Vue
     document.addEventListener('click', this.move);
   },
+  mounted() {
+    const myToastEl = document.getElementById('toast')
+    this.toast = Toast.getOrCreateInstance(myToastEl, { autohide: true, delay: 2000, animation: true })
+  },
   methods: {
     convertIndizesToString: function (idx1, idx2) {
       return idx1.toString() + idx2.toString()
     },
     reactToWebSocketMessage: function (message) {
-      const {event, eventData } = JSON.parse(message.data);
+      const {event, eventData, graveyardBlack, graveyardWhite } = JSON.parse(message.data);
       console.log("Received Message: ", event)
 
       switch (event) {
         case "GameFieldChanged":
           this.loaded = false;
-          console.log(eventData)
           this.piecesArray = eventData;
+          if (graveyardBlack) {
+            this.graveyardBlack = graveyardBlack;
+          }
+          if (graveyardWhite) {
+            this.graveyardWhite = graveyardWhite;
+          }
           this.loadGame(eventData);
           this.loaded = true;
           break;
@@ -270,35 +326,48 @@ export default {
       /// RUNNING = 0, CHECKED = 1, CHECKMATE = 2, MOVE_ILLEGAL = 3, PAWN_REACHED_END = 4
       if (status.statusID > 0) {
           this.reactToSpecialGameStatus(status);
-        } else {
-          this.closeInvalidMoveAlert();
-        }
-        const statusElement = document.getElementById("gameStatus");
-        const piece = document.getElementById("kingPiece");
-        if (status.player === "BLACK") {
-          statusElement.textContent = "PLAYER BLACK`S Turn";
-          piece.textContent = "♚";
-          piece.classList.remove("white");
-          piece.classList.add("black");
-          this.turn = "black";
-        } else {
-          statusElement.textContent = "PLAYER WHITE`S Turn";
-          piece.textContent = "♔";
-          piece.classList.remove("black");
-          piece.classList.add("white");
-          this.turn = "white";
-        }
+      } else {
+        this.closeInvalidMoveAlert();
+      }
+      const statusElement = document.getElementById("gameStatus");
+      const piece = document.getElementById("kingPiece");
+      if (status.player === "BLACK") {
+        statusElement.textContent = "PLAYER BLACK`S Turn";
+        piece.textContent = "♚";
+        piece.classList.remove("white");
+        piece.classList.add("black");
+        this.turn = "black";
+      } else {
+        statusElement.textContent = "PLAYER WHITE`S Turn";
+        piece.textContent = "♔";
+        piece.classList.remove("black");
+        piece.classList.add("white");
+        this.turn = "white";
+      }
     },
     reactToSpecialGameStatus: function (status) {
       // ToDo: Save Games (Local Storage)
       console.log('Special Status: ', status.statusID)
+      if (status.statusID === this.currentStatusID) {
+        return;
+      }
+      this.currentStatusID = status.statusID;
+
+
+      this.closeInvalidMoveAlert();
+      this.playerColor = status.player;
 
       if (status.statusID === 3) {
-        $('#invalid-move-alert').text("Invalid Move").css("opacity", "100");
+        this.toastTitle = "Invalid Move";
+        this.toastText = "Please try to move again.";
+        this.toast.show();
         return;
       }
       if (status.statusID === 1) {
-        $('#invalid-move-alert').text("Player " + status.player + " is Checked").css("opacity", "100");
+        console.log(status.player + " is Checked")
+        this.toastTitle = "Player Checked!";
+        this.toastText = "Player " + status.player + " is Checked";
+        this.toast.show();
         return;
       }
       if (status.statusID === 2) {
@@ -317,11 +386,12 @@ export default {
       }
     },
     closeInvalidMoveAlert: function () {
-      $('#invalid-move-alert').css("opacity", "0");
+      this.toast.hide()
     },
     newGame: function () {
       this.sendWebSocketRequest("new-game");
       this.showGameOverModal = false;
+      this.closeInvalidMoveAlert();
     },
     move: function (event) {
       const id = event.target.id;
@@ -361,7 +431,6 @@ export default {
     suggestMoves: function (target, targetID) {
       const targetValue = target.getAttribute('value');
       const color = this.getColor(targetValue)
-      console.log('Piece: ', targetValue)
 
       switch (targetValue) {
         case '♚':
@@ -866,6 +935,20 @@ label {
 .piece_component {
   width: 100%;
   height: 100%;
+}
+
+toast_svg {
+  margin-right: .5em;
+}
+.toast {
+  color: #842029;
+  background-color: #f8d7da;
+  border-color: #f5c2c7;
+}
+.toast-header {
+  color: #842029;
+  background-color: #fdbec3;
+  border-color: #f5c2c7;
 }
 
 </style>

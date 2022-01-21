@@ -17,7 +17,7 @@
             </div>
 
             <div>
-              <p class="text-muted mb-2">Or Login with a regular Account</p>
+              <p class="text-muted mb-2">...or Login with a regular Account</p>
             </div>
 
             <div class="card-body">

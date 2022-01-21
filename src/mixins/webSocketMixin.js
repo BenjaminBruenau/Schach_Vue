@@ -2,6 +2,7 @@ export const webSocketMixin = {
     data: function () {
         return {
             webSocket: Object,
+            timerId: 0,
         }
     },
     methods: {
@@ -11,11 +12,12 @@ export const webSocketMixin = {
                 return;
             }
 
-            this.webSocket = new WebSocket("wss://schach-playserver.herokuapp.com/websocket", [userToken]);
+            this.webSocket = new WebSocket("ws://localhost:9000/websocket", [userToken]);
 
             this.webSocket.onopen = () => {
                 console.log("[WebSocket] Connected to WebSocket: ", this.webSocket.url);
                 this.sendWebSocketRequest("connect");
+                this.keepAlive();
             };
 
             /// Default
@@ -24,6 +26,13 @@ export const webSocketMixin = {
             this.webSocket.onerror = event => console.error(event);
 
             this.webSocket.onclose = () => setTimeout(this.connectToWebSocket, 5000); console.log("[WebSocket] Reconnecting to WebSocket");
+        },
+        keepAlive: function () {
+          const timeout = 20000; // 20s
+            if (this.webSocket.readyState && this.webSocket.readyState === WebSocket.OPEN) {
+                this.sendWebSocketRequest('Keep Alive');
+            }
+            this.timerId = setTimeout(this.keepAlive, timeout);
         },
         setOnMessage: function (func) {
             this.webSocket.onmessage = func;
