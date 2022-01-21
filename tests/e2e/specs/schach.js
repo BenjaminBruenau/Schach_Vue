@@ -18,9 +18,9 @@ describe('Verify Game functionality', () => {
         cy.contains('button', 'New Game').click({ force: true })
     })
     it('Should show the move suggestion for Pawns', () => {
-        cy.get('#74').click({ force: true })
-        cy.get('#64').should('have.class', 'suggestion-green')
-        cy.get('#54').should('have.class', 'suggestion-green')
+        cy.get('#74', { timeout: 5000 }).click({ force: true })
+        cy.get('#64', { timeout: 5000 }).should('have.class', 'suggestion-green')
+        cy.get('#54', { timeout: 5000 }).should('have.class', 'suggestion-green')
     })
     it('Should make an opening move', () => {
         cy.get('#54').click({ force: true })
@@ -43,6 +43,43 @@ describe('Verify Game functionality', () => {
 
         // Graveyard should be populated after piece was hit
         cy.contains('.graveyard_count', '1')
+    })
+    it('Should perform Rochade on White King', () => {
+        // Reset Pieces
+        cy.contains('button', 'New Game').click({ force: true })
+
+        // make way for Bishop
+        cy.get('#75').click({ force: true })
+        cy.get('#55').click({ force: true })
+
+        // move black Pawn two cells down
+        cy.get('#25').click({ force: true })
+        cy.get('#45').click({ force: true })
+
+        // move bishop away
+        cy.get('#86').click({ force: true })
+        cy.get('#75').click({ force: true })
+
+        // move black Pawn two cells down
+        cy.get('#23').click({ force: true })
+        cy.get('#33').click({ force: true })
+
+        // move knight away
+        cy.get('#87').click({ force: true })
+        cy.get('#68').click({ force: true })
+
+        // move black Knight
+        cy.get('#12').click({ force: true })
+        cy.get('#31').click({ force: true })
+
+        // ROCHADE
+        cy.get('#85').click({ force: true })
+        cy.get('#87').click({ force: true })
+
+        // King in Corner
+        cy.get('#87').children('.svg-piece')
+        // Rook blocking entrance
+        cy.get('#87').children('.svg-piece')
     })
 
 })
