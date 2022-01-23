@@ -378,7 +378,8 @@ export default {
         return;
       }
       if (status.statusID === 4) {
-        this.closeInvalidMoveAlert();
+        //this.closeInvalidMoveAlert();
+        $('#invalid-move-alert').css("opacity", "0");
         this.showConvertPawnModal = true;
         $('.convert_piece').click(event => {
           this.sendWebSocketRequest("convert-pawn/" + event.currentTarget.id);
