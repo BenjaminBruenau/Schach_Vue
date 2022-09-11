@@ -1,0 +1,34 @@
+name: test
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  openssl:
+    name: Test OpenSSL
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - env:
+          MY_SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
+          MY_SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
+          MY_SSH_KEY: ${{ secrets.SSH_KEY }}
+          MY_OPENSSL_PASSWORD: ${{ secrets.OPENSSL_PASSWORD }}
+          MY_OPENSSL_ITER: ${{ secrets.OPENSSL_ITERATIONS }}
+        run: |
+          echo "MY_SSH_PASSWORD (***)     = ${MY_SSH_PASSWORD}"
+          echo "MY_SSH_PASSWORD (openssl) = $(echo "${MY_SSH_PASSWORD}" | openssl enc -e -aes-256-cbc -a -pbkdf2 -iter ${MY_OPENSSL_ITER} -k "${MY_OPENSSL_PASSWORD}")"
+          echo "Copy the above value, and then execute locally:"
+          echo "echo PASTE_HERE | openssl base64 -d | openssl enc -d -pbkdf2 -iter \$MY_OPENSSL_ITER -aes-256-cbc -k \$MY_OPENSSL_PASSWORD"
+          |
+          echo "MY_SSH_USERNAME (***)     = ${SSH_USERNAME}"
+          echo "MY_SSH_USERNAME (openssl) = $(echo "${SSH_USERNAME}" | openssl enc -e -aes-256-cbc -a -pbkdf2 -iter ${MY_OPENSSL_ITER} -k "${MY_OPENSSL_PASSWORD}")"
+          echo "Copy the above value, and then execute locally:"
+          echo "echo PASTE_HERE | openssl base64 -d | openssl enc -d -pbkdf2 -iter \$MY_OPENSSL_ITER -aes-256-cbc -k \$MY_OPENSSL_PASSWORD"
+          |
+          echo "MY_SSH_KEY (***)     = ${MY_SSH_KEY}"
+          echo "MY_SSH_KEY (openssl) = $(echo "${MY_SSH_KEY}" | openssl enc -e -aes-256-cbc -a -pbkdf2 -iter ${MY_OPENSSL_ITER} -k "${MY_OPENSSL_PASSWORD}")"
+          echo "Copy the above value, and then execute locally:"
+          echo "echo PASTE_HERE | openssl base64 -d | openssl enc -d -pbkdf2 -iter \$MY_OPENSSL_ITER -aes-256-cbc -k \$MY_OPENSSL_PASSWORD"
+
