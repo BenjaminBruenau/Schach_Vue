@@ -21,12 +21,10 @@ jobs:
           echo "MY_SSH_PASSWORD (openssl) = $(echo "${MY_SSH_PASSWORD}" | openssl enc -e -aes-256-cbc -a -pbkdf2 -iter ${MY_OPENSSL_ITER} -k "${MY_OPENSSL_PASSWORD}")"
           echo "Copy the above value, and then execute locally:"
           echo "echo PASTE_HERE | openssl base64 -d | openssl enc -d -pbkdf2 -iter \$MY_OPENSSL_ITER -aes-256-cbc -k \$MY_OPENSSL_PASSWORD"
-          |
           echo "MY_SSH_USERNAME (***)     = ${SSH_USERNAME}"
           echo "MY_SSH_USERNAME (openssl) = $(echo "${SSH_USERNAME}" | openssl enc -e -aes-256-cbc -a -pbkdf2 -iter ${MY_OPENSSL_ITER} -k "${MY_OPENSSL_PASSWORD}")"
           echo "Copy the above value, and then execute locally:"
           echo "echo PASTE_HERE | openssl base64 -d | openssl enc -d -pbkdf2 -iter \$MY_OPENSSL_ITER -aes-256-cbc -k \$MY_OPENSSL_PASSWORD"
-          |
           echo "MY_SSH_KEY (***)     = ${MY_SSH_KEY}"
           echo "MY_SSH_KEY (openssl) = $(echo "${MY_SSH_KEY}" | openssl enc -e -aes-256-cbc -a -pbkdf2 -iter ${MY_OPENSSL_ITER} -k "${MY_OPENSSL_PASSWORD}")"
           echo "Copy the above value, and then execute locally:"
